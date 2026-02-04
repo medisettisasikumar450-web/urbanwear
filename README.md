@@ -1,39 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>UrbanWear Mart</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{margin:0;font-family:Arial;background:#f2f2f2}
-header{background:#131921;color:white;padding:15px;text-align:center;font-size:24px}
+body{margin:0;font-family:Arial;background:#f5f5f5}
+header{background:#0f1111;color:#fff;padding:15px;text-align:center;font-size:24px}
 nav{display:flex;justify-content:space-around;background:#ff9900;padding:10px}
-nav button{border:none;padding:10px;border-radius:6px;cursor:pointer}
-.page{display:none;padding:20px;animation:fade .4s}
+nav button{border:none;padding:10px 14px;border-radius:5px;font-size:14px;cursor:pointer}
+.page{display:none;animation:fade .3s}
 .active{display:block}
-@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
-.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px}
-.card{background:white;padding:10px;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,.2)}
-.card img{width:100%;height:140px;object-fit:cover}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:15px;padding:15px}
+.card{background:#fff;padding:10px;border-radius:8px;box-shadow:0 0 8px rgba(0,0,0,.1)}
+.card img{width:100%;height:140px;object-fit:cover;border-radius:6px}
 .price{color:green;font-weight:bold}
-button.buy{background:#ff9900;border:none;width:100%;padding:8px;margin-top:5px}
-footer{background:#131921;color:white;text-align:center;padding:10px}
+button.buy{background:#ff9900;border:none;padding:6px;width:100%;border-radius:5px;margin-top:5px}
+
+footer{background:#0f1111;color:white;text-align:center;padding:10px}
 </style>
 
 <script>
 let cart=[],orders=[];
+
 function show(p){
  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
  document.getElementById(p).classList.add('active');
 }
-function add(n,p){
- cart.push({n,p});
- alert(n+" added to cart");
+
+function add(name,price){
+ cart.push({name,price});
+ alert(name+" added to cart");
 }
-function checkout(){
- if(cart.length==0){alert("Cart empty");return;}
- orders.push(...cart); cart=[];
- alert("Payment Successful (Demo)");
+
+function viewCart(){
+ let t="";
+ let total=0;
+ cart.forEach(i=>{t+=i.name+" - ₹"+i.price+"<br>";total+=i.price});
+ document.getElementById("cartItems").innerHTML=t+"<hr>Total ₹"+total;
+ show('cart');
+}
+
+function pay(){
+ orders.push(...cart);
+ cart=[];
+ alert("Payment Successful ✅");
+ show('orders');
+}
+
+function loadOrders(){
+ let t="";
+ orders.forEach(o=>t+=o.name+" - ₹"+o.price+"<br>");
+ document.getElementById("orderList").innerHTML=t || "No orders yet";
 }
 </script>
 </head>
@@ -44,67 +65,72 @@ function checkout(){
 
 <nav>
 <button onclick="show('home')">Home</button>
-<button onclick="show('grocery')">Groceries</button>
 <button onclick="show('food')">Food</button>
-<button onclick="show('cart')">Cart</button>
+<button onclick="show('grocery')">Grocery</button>
+<button onclick="viewCart()">Cart</button>
+<button onclick="loadOrders();show('orders')">Orders</button>
+<button onclick="show('admin')">Admin</button>
 </nav>
 
+<!-- HOME -->
 <div id="home" class="page active">
-<h2>Welcome</h2>
-<p>All Groceries & Food Items at Best Prices</p>
+<h2 style="text-align:center">Welcome to UrbanWear Mart</h2>
+<p style="text-align:center">Food • Groceries • Fast Delivery</p>
 </div>
 
-<!-- GROCERY (20 ITEMS) -->
-<div id="grocery" class="page">
-<h2>Groceries</h2>
+<!-- FOOD -->
+<div id="food" class="page">
 <div class="products">
 <script>
-let grocery=[
-["Rice 1kg",60],["Wheat Flour",55],["Sugar",45],["Salt",20],["Cooking Oil",160],
-["Toor Dal",120],["Chana Dal",95],["Moong Dal",110],["Tea Powder",140],["Coffee",180],
-["Milk Packet",30],["Bread",40],["Eggs (6)",55],["Butter",95],["Cheese",120],
-["Tomato",25],["Onion",30],["Potato",35],["Apple",120],["Banana",50]
-];
-for(let g of grocery){
+["Pizza","Burger","Biryani","Pasta","Sandwich","Noodles","Fried Rice","Cake","Ice Cream","Fries",
+"Chicken Curry","Paneer","Dosa","Idli","Samosa","Pav Bhaji","Tacos","Hotdog","Soup","Salad"]
+.forEach((i,n)=>{
 document.write(`<div class="card">
-<img src="https://source.unsplash.com/300x200/?grocery,food">
-<h4>${g[0]}</h4>
-<p class="price">₹${g[1]}</p>
-<button class="buy" onclick="add('${g[0]}',${g[1]})">Add to Cart</button>
+<img src="https://source.unsplash.com/300x200/?${i},food">
+<h4>${i}</h4>
+<p class="price">₹${100+n*10}</p>
+<button class="buy" onclick="add('${i}',${100+n*10})">Add to Cart</button>
 </div>`);
-}
+});
 </script>
 </div>
 </div>
 
-<!-- FOOD (20 ITEMS) -->
-<div id="food" class="page">
-<h2>Food Items</h2>
+<!-- GROCERY -->
+<div id="grocery" class="page">
 <div class="products">
 <script>
-let food=[
-["Veg Burger",99],["Chicken Burger",129],["Veg Pizza",199],["Chicken Pizza",249],
-["Paneer Biryani",220],["Chicken Biryani",260],["Veg Noodles",140],["Chicken Noodles",170],
-["Veg Fried Rice",150],["Chicken Fried Rice",180],["Masala Dosa",80],["Idli",60],
-["Vada",50],["Samosa",25],["French Fries",90],["Ice Cream",70],
-["Chocolate Cake",120],["Cold Coffee",90],["Fresh Juice",80],["Milk Shake",100]
-];
-for(let f of food){
+["Rice","Wheat Flour","Sugar","Salt","Milk","Eggs","Bread","Oil","Butter","Cheese",
+"Tea","Coffee","Biscuits","Apples","Bananas","Potatoes","Onions","Tomatoes","Dal","Spices"]
+.forEach((i,n)=>{
 document.write(`<div class="card">
-<img src="https://source.unsplash.com/300x200/?food,meal">
-<h4>${f[0]}</h4>
-<p class="price">₹${f[1]}</p>
-<button class="buy" onclick="add('${f[0]}',${f[1]})">Add to Cart</button>
+<img src="https://source.unsplash.com/300x200/?${i},grocery">
+<h4>${i}</h4>
+<p class="price">₹${50+n*8}</p>
+<button class="buy" onclick="add('${i}',${50+n*8})">Add to Cart</button>
 </div>`);
-}
+});
 </script>
 </div>
 </div>
 
 <!-- CART -->
 <div id="cart" class="page">
-<h2>Cart</h2>
-<button class="buy" onclick="checkout()">Pay Now</button>
+<h3 style="padding:15px">Cart</h3>
+<div id="cartItems" style="padding:15px"></div>
+<button class="buy" onclick="pay()" style="margin:15px">Pay Now</button>
+</div>
+
+<!-- ORDERS -->
+<div id="orders" class="page">
+<h3 style="padding:15px">Order History</h3>
+<div id="orderList" style="padding:15px"></div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin" class="page">
+<h3 style="padding:15px">Admin Panel (Demo)</h3>
+<p style="padding:15px">Total Orders: <b><script>document.write(orders.length)</script></b></p>
 </div>
 
 <footer>© 2026 UrbanWear Mart</footer>
