@@ -24,7 +24,7 @@ footer{background:#0f1111;color:white;text-align:center;padding:10px}
 </style>
 
 <script>
-let cart=[],orders=[];
+let cart=[], buy=[],orders=[];
 
 function show(p){
  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
